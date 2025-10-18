@@ -2,6 +2,7 @@
 let themes = [];
 let recentThemes = []; // 最近使用したテーマを記録
 const maxRecentThemes = 10; // 最近のテーマの記録数
+let recentPeople = []; // 最近選ばれた人を記録
 
 // ページ読み込み時の処理
 document.addEventListener('DOMContentLoaded', async () => {
@@ -130,11 +131,36 @@ function runGacha() {
     }
 
     // ランダムに選択
-    const selectedPerson = participants[Math.floor(Math.random() * participants.length)];
+    const selectedPerson = selectUniquePerson(participants);
     const selectedTheme = selectUniqueTheme();
 
     // 結果を表示
     displayResult(selectedPerson, selectedTheme);
+}
+
+// 最近選ばれていない人を選択する
+function selectUniquePerson(participants) {
+    // 使用可能な参加者を取得（最近選ばれた人を除外）
+    let availablePeople = participants.filter(person => !recentPeople.includes(person));
+
+    // 全員が最近選ばれている場合は、全員から選択
+    if (availablePeople.length === 0) {
+        availablePeople = participants;
+        recentPeople = []; // 履歴をリセット
+    }
+
+    // ランダムに選択
+    const selectedPerson = availablePeople[Math.floor(Math.random() * availablePeople.length)];
+
+    // 選択した人を履歴に追加
+    recentPeople.push(selectedPerson);
+
+    // 履歴が参加者数を超えたら古いものから削除
+    if (recentPeople.length > participants.length) {
+        recentPeople.shift();
+    }
+
+    return selectedPerson;
 }
 
 // 最近使用していないテーマを選択する

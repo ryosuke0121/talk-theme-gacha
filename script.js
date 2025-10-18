@@ -13,7 +13,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 // テーマをJSONファイルから読み込む
 async function loadThemes() {
     try {
-        const response = await fetch('themes.json');
+        // キャッシュを回避するためにタイムスタンプを追加
+        const timestamp = new Date().getTime();
+        const response = await fetch(`themes.json?v=${timestamp}`, {
+            cache: 'no-store'
+        });
         const data = await response.json();
         themes = data.themes;
         console.log(`${themes.length}個のテーマを読み込みました`);

@@ -320,9 +320,19 @@ main {
 footer {
     text-align: center;
     margin-top: 40px;
+    padding: 20px;
     color: white;
     font-size: 0.9em;
-    opacity: 0.8;
+}
+
+footer p {
+    margin: 5px 0;
+    opacity: 0.9;
+}
+
+footer .version {
+    font-size: 0.85em;
+    opacity: 0.7;
 }
 
 /* アニメーション */

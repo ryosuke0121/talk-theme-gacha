@@ -1,0 +1,14 @@
+{
+  "name": "talk-theme-gacha",
+  "version": "1.0.0",
+  "description": "トークテーマガチャ - ランダムに参加者とテーマを選ぶWebアプリケーション",
+  "scripts": {
+    "version": "node update-version.js && git add index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ryosuke0121/talk-theme-gacha.git"
+  },
+  "author": "Ryosuke Fujimoto",
+  "license": "MIT"
+}

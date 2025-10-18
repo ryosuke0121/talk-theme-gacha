@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>トークテーマガチャ</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>🎲 トークテーマガチャ 🎲</h1>
+      </header>
+
+      <main>
+        <!-- ガチャボタン -->
+        <section class="gacha-section">
+          <button id="gacha-btn" class="btn-primary">ガチャを回す!</button>
+        </section>
+
+        <!-- 結果表示セクション -->
+        <section
+          class="result-section"
+          id="result-section"
+          style="display: none"
+        >
+          <div class="result-card">
+            <div class="result-person">
+              <h3>【<span id="result-name"></span>】話して!</h3>
+            </div>
+            <div class="result-theme">
+              <p id="result-theme-text"></p>
+            </div>
+          </div>
+          <!-- 設定ボタン -->
+          <div class="settings-button-container">
+            <button id="open-settings-btn" class="btn-settings">⚙️ 設定</button>
+          </div>
+        </section>
+
+        <!-- 初期メッセージ（結果が表示される前） -->
+        <section class="initial-message" id="initial-message">
+          <div class="message-card">
+            <p>👆 ボタンを押してガチャを回そう!</p>
+            <button id="open-settings-btn-initial" class="btn-settings">
+              ⚙️ 設定
+            </button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- 設定モーダル -->
+    <div id="settings-modal" class="modal" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>⚙️ 話し手の設定</h2>
+          <button class="close-btn" id="close-settings-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-description">参加者を追加・削除できます</p>
+          <div id="participants-container">
+            <div class="participant-row">
+              <input
+                type="text"
+                class="participant-input"
+                placeholder="名前を入力"
+              />
+              <button class="remove-btn" onclick="removeParticipant(this)">
+                削除
+              </button>
+            </div>
+            <div class="participant-row">
+              <input
+                type="text"
+                class="participant-input"
+                placeholder="名前を入力"
+              />
+              <button class="remove-btn" onclick="removeParticipant(this)">
+                削除
+              </button>
+            </div>
+            <div class="participant-row">
+              <input
+                type="text"
+                class="participant-input"
+                placeholder="名前を入力"
+              />
+              <button class="remove-btn" onclick="removeParticipant(this)">
+                削除
+              </button>
+            </div>
+          </div>
+          <button id="add-participant-btn" class="btn-secondary">
+            + 参加者を追加
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button id="save-settings-btn" class="btn-primary-small">
+            保存して閉じる
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

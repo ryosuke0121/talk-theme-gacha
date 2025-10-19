@@ -8,6 +8,7 @@ let recentPeople = []; // 最近選ばれた人を記録
 document.addEventListener('DOMContentLoaded', async () => {
     await loadThemes();
     setupEventListeners();
+    loadParticipantsFromCache();
     updateInitialMessage();
 });
 
@@ -50,6 +51,20 @@ function setupEventListeners() {
     // ガチャボタン
     document.getElementById('gacha-btn').addEventListener('click', runGacha);
 
+    // Enterキーでガチャを実行
+    document.addEventListener('keydown', (event) => {
+        // モーダルが開いている場合は除外
+        const modal = document.getElementById('settings-modal');
+        if (modal.style.display === 'block') {
+            return;
+        }
+
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            runGacha();
+        }
+    });
+
     // 参加者追加ボタン
     document.getElementById('add-participant-btn').addEventListener('click', addParticipant);
 
@@ -69,12 +84,16 @@ function setupEventListeners() {
     document.getElementById('close-settings-btn').addEventListener('click', closeSettingsModal);
 
     // 保存して閉じる
-    document.getElementById('save-settings-btn').addEventListener('click', closeSettingsModal);
+    document.getElementById('save-settings-btn').addEventListener('click', () => {
+        saveParticipantsToCache();
+        closeSettingsModal();
+    });
 
     // モーダル外をクリックしたら閉じる
     const modal = document.getElementById('settings-modal');
     window.addEventListener('click', (event) => {
         if (event.target === modal) {
+            saveParticipantsToCache();
             closeSettingsModal();
         }
     });
@@ -92,7 +111,63 @@ function closeSettingsModal() {
     const modal = document.getElementById('settings-modal');
     modal.style.display = 'none';
     document.body.style.overflow = 'auto'; // スクロールを戻す
-}// 参加者を追加
+}
+
+// 参加者をlocalStorageに保存
+function saveParticipantsToCache() {
+    const inputs = document.querySelectorAll('.participant-input');
+    const participants = Array.from(inputs)
+        .map(input => input.value.trim())
+        .filter(name => name !== '');
+
+    localStorage.setItem('participants', JSON.stringify(participants));
+    console.log('参加者を保存しました:', participants);
+}
+
+// 参加者をlocalStorageから読み込み
+function loadParticipantsFromCache() {
+    const savedParticipants = localStorage.getItem('participants');
+
+    if (!savedParticipants) {
+        return;
+    }
+
+    try {
+        const participants = JSON.parse(savedParticipants);
+        const container = document.getElementById('participants-container');
+
+        // 既存の入力フィールドをクリア
+        container.innerHTML = '';
+
+        // 保存された参加者がいる場合
+        if (participants.length > 0) {
+            participants.forEach(name => {
+                const newRow = document.createElement('div');
+                newRow.className = 'participant-row';
+                newRow.innerHTML = `
+                    <input type="text" class="participant-input" placeholder="名前を入力" value="${name}">
+                    <button class="remove-btn" onclick="removeParticipant(this)">削除</button>
+                `;
+                container.appendChild(newRow);
+            });
+        } else {
+            // 保存された参加者がいない場合、デフォルトで3つの空欄を作成
+            for (let i = 0; i < 3; i++) {
+                addParticipant();
+            }
+        }
+
+        console.log('参加者を読み込みました:', participants);
+    } catch (error) {
+        console.error('参加者の読み込みに失敗しました:', error);
+        // エラーの場合、デフォルトで3つの空欄を作成
+        for (let i = 0; i < 3; i++) {
+            addParticipant();
+        }
+    }
+}
+
+// 参加者を追加
 function addParticipant() {
     const container = document.getElementById('participants-container');
 

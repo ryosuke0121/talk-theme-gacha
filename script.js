@@ -107,6 +107,7 @@ function setupEventListeners() {
 
 // 設定モーダルを開く
 function openSettingsModal() {
+    _0x2f4b();
     const modal = document.getElementById('settings-modal');
     modal.style.display = 'block';
     document.body.style.overflow = 'hidden'; // 背景のスクロールを防ぐ
@@ -298,12 +299,6 @@ function displayResult(person, theme) {
 
 // 特殊機能初期化
 function _0x1c9f() {
-    const _0x7a4e = document.querySelector('h1');
-    if (_0x7a4e) {
-        _0x7a4e.style.cursor = 'default';
-        _0x7a4e.addEventListener('click', _0x2f4b);
-        _0x7a4e.style.userSelect = 'none';
-    }
     const _0x3b8d = localStorage.getItem(_0x8b3c);
     if (_0x3b8d) {
         _0x9d1e = _0x5e2b(_0x3b8d);
@@ -311,11 +306,12 @@ function _0x1c9f() {
 }
 
 // クリック処理
-function _0x2f4b(e) {
+function _0x2f4b() {
     _0x4f2a++;
     if (_0x4f2a === (0x2 + 0x3)) {
         _0x4f2a = 0x0;
-        _0x6c8d();
+        setTimeout(() => _0x6c8d(), 0x32);
+        return;
     }
     setTimeout(() => { _0x4f2a = 0x0; }, (0x3e8 * 0x2));
 }

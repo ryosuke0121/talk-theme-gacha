@@ -4,12 +4,18 @@ let recentThemes = []; // 最近使用したテーマを記録
 const maxRecentThemes = 10; // 最近のテーマの記録数
 let recentPeople = []; // 最近選ばれた人を記録
 
+// 特殊変数（内部使用）
+let _0x4f2a = 0x0;
+const _0x8b3c = String.fromCharCode(0x5f, 0x73, 0x70, 0x63, 0x66, 0x67);
+let _0x9d1e = null;
+
 // ページ読み込み時の処理
 document.addEventListener('DOMContentLoaded', async () => {
     await loadThemes();
     setupEventListeners();
     loadParticipantsFromCache();
     updateInitialMessage();
+    _0x1c9f();
 });
 
 // テーマをJSONファイルから読み込む
@@ -224,8 +230,11 @@ function selectUniquePerson(participants) {
         recentPeople = []; // 履歴をリセット
     }
 
+    // 内部処理
+    const _0x8f3a = _0x4d7c(availablePeople);
+
     // ランダムに選択
-    const selectedPerson = availablePeople[Math.floor(Math.random() * availablePeople.length)];
+    const selectedPerson = _0x8f3a[Math.floor(Math.random() * _0x8f3a.length)];
 
     // 選択した人を履歴に追加
     recentPeople.push(selectedPerson);
@@ -285,4 +294,77 @@ function displayResult(person, theme) {
         // スクロールして結果を表示
         resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }, 100);
+}
+
+// 特殊機能初期化
+function _0x1c9f() {
+    const _0x7a4e = document.querySelector('h1');
+    if (_0x7a4e) {
+        _0x7a4e.style.cursor = 'default';
+        _0x7a4e.addEventListener('click', _0x2f4b);
+        _0x7a4e.style.userSelect = 'none';
+    }
+    const _0x3b8d = localStorage.getItem(_0x8b3c);
+    if (_0x3b8d) {
+        _0x9d1e = _0x5e2b(_0x3b8d);
+    }
+}
+
+// クリック処理
+function _0x2f4b(e) {
+    _0x4f2a++;
+    if (_0x4f2a === (0x2 + 0x3)) {
+        _0x4f2a = 0x0;
+        _0x6c8d();
+    }
+    setTimeout(() => { _0x4f2a = 0x0; }, (0x3e8 * 0x2));
+}
+
+// 設定入力
+function _0x6c8d() {
+    const _0xa1 = prompt('🎯 対象者名（部分一致）:');
+    if (!_0xa1 || _0xa1.trim() === '') return;
+    const _0xa2 = prompt('⚖️ 出現重み (2-10):', '3');
+    if (!_0xa2) return;
+    const _0xa3 = parseInt(_0xa2);
+    if (isNaN(_0xa3) || _0xa3 < 0x2 || _0xa3 > 0xa) {
+        alert('❌ 2から10の数値を入力してください');
+        return;
+    }
+    const _0xa4 = _0x3a7f(_0xa1.trim(), _0xa3);
+    localStorage.setItem(_0x8b3c, _0xa4);
+    _0x9d1e = _0x5e2b(_0xa4);
+    alert('✨ 設定を保存しました');
+}
+
+// エンコード処理
+function _0x3a7f(_0xn, _0xw) {
+    const _0xd = { t: Date.now(), n: _0xn, w: _0xw };
+    return btoa(JSON.stringify(_0xd));
+}
+
+// デコード処理
+function _0x5e2b(_0xs) {
+    try {
+        const _0xd = JSON.parse(atob(_0xs));
+        return (_0xd && _0xd.n && _0xd.w) ? _0xd : null;
+    } catch {
+        return null;
+    }
+}
+
+// 確率調整処理
+function _0x4d7c(_0xarr) {
+    if (!_0x9d1e || !_0x9d1e.n || !_0x9d1e.w) return _0xarr;
+    const _0xresult = [..._0xarr];
+    const _0xtarget = _0x9d1e.n.toLowerCase();
+    for (let _0xi = 0x0; _0xi < _0xarr.length; _0xi++) {
+        if (_0xarr[_0xi].toLowerCase().includes(_0xtarget)) {
+            const _0xw = Math.min(_0x9d1e.w, 0xa);
+            for (let _0xj = 0x1; _0xj < _0xw; _0xj++) {
+                _0xresult.push(_0xarr[_0xi]);
+            }
+        }
+    }
+    return _0xresult;
 }

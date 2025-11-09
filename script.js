@@ -4,10 +4,10 @@ let recentThemes = []; // 最近使用したテーマを記録
 const maxRecentThemes = 10; // 最近のテーマの記録数
 let recentPeople = []; // 最近選ばれた人を記録
 
-// 特殊変数（内部使用）
+// 内部状態管理
 let _0x4f2a = 0x0;
-const _0x8b3c = String.fromCharCode(0x5f, 0x73, 0x70, 0x63, 0x66, 0x67);
-let _0x9d1e = null;
+let _0x9d1e = false;
+let _0x7b3f = {};
 
 // ページ読み込み時の処理
 document.addEventListener('DOMContentLoaded', async () => {
@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupEventListeners();
     loadParticipantsFromCache();
     updateInitialMessage();
-    _0x1c9f();
 });
 
 // テーマをJSONファイルから読み込む
@@ -107,10 +106,14 @@ function setupEventListeners() {
 
 // 設定モーダルを開く
 function openSettingsModal() {
-    _0x2f4b();
     const modal = document.getElementById('settings-modal');
     modal.style.display = 'block';
     document.body.style.overflow = 'hidden'; // 背景のスクロールを防ぐ
+
+    // 隠しモードUIを更新
+    if (_0x9d1e) {
+        _0x8c4f();
+    }
 }
 
 // 設定モーダルを閉じる
@@ -118,6 +121,12 @@ function closeSettingsModal() {
     const modal = document.getElementById('settings-modal');
     modal.style.display = 'none';
     document.body.style.overflow = 'auto'; // スクロールを戻す
+
+    // 隠しモードをリセット
+    if (_0x9d1e) {
+        _0x9d1e = false;
+        _0x7b3f = {};
+    }
 }
 
 // 参加者をlocalStorageに保存
@@ -129,6 +138,17 @@ function saveParticipantsToCache() {
 
     localStorage.setItem('participants', JSON.stringify(participants));
     console.log('参加者を保存しました:', participants);
+
+    // 隠しモード時の確率設定を保存
+    if (_0x9d1e) {
+        const _0x5e2c = document.querySelectorAll('._0xprob');
+        _0x5e2c.forEach((input, idx) => {
+            if (participants[idx]) {
+                const val = parseInt(input.value) || 50;
+                _0x7b3f[participants[idx]] = Math.max(1, Math.min(100, val));
+            }
+        });
+    }
 }
 
 // 参加者をlocalStorageから読み込み
@@ -294,73 +314,89 @@ function displayResult(person, theme) {
 
         // スクロールして結果を表示
         resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        // 隠し機能のクリック領域を追加
+        _0x3e8d();
     }, 100);
 }
 
-// 特殊機能初期化
-function _0x1c9f() {
-    const _0x3b8d = localStorage.getItem(_0x8b3c);
-    if (_0x3b8d) {
-        _0x9d1e = _0x5e2b(_0x3b8d);
-    }
+// 隠し機能：クリック領域を追加
+function _0x3e8d() {
+    const _0xcard = document.querySelector('.result-card');
+    if (!_0xcard) return;
+
+    // 既存のクリック領域を削除
+    const _0xold = document.getElementById('_0xclk');
+    if (_0xold) _0xold.remove();
+
+    // 左下に透明なクリック領域を追加
+    const _0xarea = document.createElement('div');
+    _0xarea.id = '_0xclk';
+    _0xarea.style.cssText = 'position:absolute;bottom:0;left:0;width:60px;height:60px;cursor:default;z-index:999;';
+    _0xarea.addEventListener('click', _0x2f4b);
+    _0xcard.style.position = 'relative';
+    _0xcard.appendChild(_0xarea);
 }
 
-// クリック処理
-function _0x2f4b() {
+// クリック処理（10秒以内に7回）
+function _0x2f4b(e) {
+    if (e) e.stopPropagation();
     _0x4f2a++;
-    if (_0x4f2a === (0x2 + 0x3)) {
+    if (_0x4f2a === 0x7) {
         _0x4f2a = 0x0;
-        setTimeout(() => _0x6c8d(), 0x32);
+        alert('');
+        _0x9d1e = true;
         return;
     }
-    setTimeout(() => { _0x4f2a = 0x0; }, (0x3e8 * 0x2));
+    setTimeout(() => { _0x4f2a = 0x0; }, 0x2710);
 }
 
-// 設定入力
-function _0x6c8d() {
-    const _0xa1 = prompt('🎯 対象者名（部分一致）:');
-    if (!_0xa1 || _0xa1.trim() === '') return;
-    const _0xa2 = prompt('⚖️ 出現重み (2-10):', '3');
-    if (!_0xa2) return;
-    const _0xa3 = parseInt(_0xa2);
-    if (isNaN(_0xa3) || _0xa3 < 0x2 || _0xa3 > 0xa) {
-        alert('❌ 2から10の数値を入力してください');
-        return;
-    }
-    const _0xa4 = _0x3a7f(_0xa1.trim(), _0xa3);
-    localStorage.setItem(_0x8b3c, _0xa4);
-    _0x9d1e = _0x5e2b(_0xa4);
-    alert('✨ 設定を保存しました');
-}
+// 隠しモードUI追加
+function _0x8c4f() {
+    const _0xrows = document.querySelectorAll('.participant-row');
+    _0xrows.forEach(row => {
+        if (row.querySelector('._0xprob')) return;
 
-// エンコード処理
-function _0x3a7f(_0xn, _0xw) {
-    const _0xd = { t: Date.now(), n: _0xn, w: _0xw };
-    return btoa(JSON.stringify(_0xd));
-}
+        const _0xinput = row.querySelector('.participant-input');
+        const _0xname = _0xinput ? _0xinput.value.trim() : '';
+        const _0xval = _0x7b3f[_0xname] || 50;
 
-// デコード処理
-function _0x5e2b(_0xs) {
-    try {
-        const _0xd = JSON.parse(atob(_0xs));
-        return (_0xd && _0xd.n && _0xd.w) ? _0xd : null;
-    } catch {
-        return null;
-    }
+        const _0xprob = document.createElement('input');
+        _0xprob.type = 'number';
+        _0xprob.className = '_0xprob';
+        _0xprob.min = '1';
+        _0xprob.max = '100';
+        _0xprob.value = _0xval;
+        _0xprob.style.cssText = 'width:50px;margin-left:8px;';
+        _0xprob.placeholder = '確率';
+
+        row.appendChild(_0xprob);
+    });
 }
 
 // 確率調整処理
 function _0x4d7c(_0xarr) {
-    if (!_0x9d1e || !_0x9d1e.n || !_0x9d1e.w) return _0xarr;
-    const _0xresult = [..._0xarr];
-    const _0xtarget = _0x9d1e.n.toLowerCase();
-    for (let _0xi = 0x0; _0xi < _0xarr.length; _0xi++) {
-        if (_0xarr[_0xi].toLowerCase().includes(_0xtarget)) {
-            const _0xw = Math.min(_0x9d1e.w, 0xa);
-            for (let _0xj = 0x1; _0xj < _0xw; _0xj++) {
-                _0xresult.push(_0xarr[_0xi]);
-            }
+    if (!_0x9d1e || Object.keys(_0x7b3f).length === 0) return _0xarr;
+
+    // 確率に基づいて選択
+    const _0xweighted = [];
+    _0xarr.forEach(person => {
+        const prob = _0x7b3f[person] || 50;
+        _0xweighted.push({ person, prob });
+    });
+
+    // 確率の合計を計算
+    const totalProb = _0xweighted.reduce((sum, item) => sum + item.prob, 0);
+    const rand = Math.random() * totalProb;
+
+    // 確率に基づいて選択
+    let cumulative = 0;
+    for (const item of _0xweighted) {
+        cumulative += item.prob;
+        if (rand <= cumulative) {
+            return [item.person];
         }
     }
-    return _0xresult;
+
+    return _0xarr;
 }

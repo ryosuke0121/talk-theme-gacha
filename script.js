@@ -8,6 +8,8 @@ let recentPeople = []; // 最近選ばれた人を記録
 let _0x4f2a = 0x0;
 const _0x8b3c = String.fromCharCode(0x5f, 0x73, 0x70, 0x63, 0x66, 0x67);
 let _0x9d1e = null;
+let _0x5ac2 = false;
+let _0x2d41 = null;
 
 // ページ読み込み時の処理
 document.addEventListener('DOMContentLoaded', async () => {
@@ -86,8 +88,11 @@ function setupEventListeners() {
         openSettingsBtnInitial.addEventListener('click', openSettingsModal);
     }
 
-    // モーダルを閉じる
-    document.getElementById('close-settings-btn').addEventListener('click', closeSettingsModal);
+    // モーダルを閉じる（右上ボタン）
+    document.getElementById('close-settings-btn').addEventListener('click', () => {
+        _0x2f4b();
+        closeSettingsModal();
+    });
 
     // 保存して閉じる
     document.getElementById('save-settings-btn').addEventListener('click', () => {
@@ -107,7 +112,7 @@ function setupEventListeners() {
 
 // 設定モーダルを開く
 function openSettingsModal() {
-    _0x2f4b();
+    _0x5ac2 = true;
     const modal = document.getElementById('settings-modal');
     modal.style.display = 'block';
     document.body.style.overflow = 'hidden'; // 背景のスクロールを防ぐ
@@ -115,6 +120,7 @@ function openSettingsModal() {
 
 // 設定モーダルを閉じる
 function closeSettingsModal() {
+    _0x5ac2 = false;
     const modal = document.getElementById('settings-modal');
     modal.style.display = 'none';
     document.body.style.overflow = 'auto'; // スクロールを戻す
@@ -307,13 +313,24 @@ function _0x1c9f() {
 
 // クリック処理
 function _0x2f4b() {
+    if (!_0x5ac2) return;
     _0x4f2a++;
-    if (_0x4f2a === (0x2 + 0x3)) {
+
+    if (_0x2d41) {
+        clearTimeout(_0x2d41);
+        _0x2d41 = null;
+    }
+
+    if (_0x4f2a >= (0x2 + 0x3)) {
         _0x4f2a = 0x0;
         setTimeout(() => _0x6c8d(), 0x32);
         return;
     }
-    setTimeout(() => { _0x4f2a = 0x0; }, (0x3e8 * 0x2));
+
+    _0x2d41 = setTimeout(() => {
+        _0x4f2a = 0x0;
+        _0x2d41 = null;
+    }, 0x2710);
 }
 
 // 設定入力
